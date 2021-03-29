@@ -12,21 +12,6 @@ const computerPlay = () => {
     }
 };
 
-const playerPlay = () => {
-    // Ask user move and capitalize it
-    let playerMove = prompt('Choose Rock, Paper or Scissors');
-    playerMove = capitalize(playerMove);
-
-    // If move is invalid, ask the user again
-    let possibleMoves = ['Rock', 'Paper', 'Scissors'];
-    while (!possibleMoves.includes(playerMove)) {
-        playerMove = prompt('Invalid move, please choose again');
-        playerMove = capitalize(playerMove);
-    }
-
-    return playerMove;
-};
-
 const winMessage = (move1, move2) => {
     return `You Win! ${move1} beats ${move2}`;
 };
@@ -52,29 +37,37 @@ const playRound = (playerSel, computerSel) => {
     return loseMessage(playerSel, computerSel);
 };
 
-const game = () => {
-    // Set up player and computer scores
-    let playerScore = 0;
-    let computerScore = 0;
+function game(e) {
+    let score = document.querySelector('#score');
+    let resultPara = document.querySelector('#result');
 
     // Repeat round until one of them gets 5 points
-    while (!(playerScore == 5 || computerScore == 5)) {
+    if (!(playerScore == 5 || computerScore == 5)) {
         // Play round and store it in a variable
-        let roundResult = playRound(playerPlay(), computerPlay());
-        alert(roundResult);
-        // Add or substract points according to the result
+        let roundResult = playRound(this.textContent, computerPlay());
+        resultPara.textContent = roundResult;
+        // Add or s0ubstract points according to the result
         if (roundResult.includes('Win')) playerScore++;
         if (roundResult.includes('Lose')) computerScore++;
         // Display current scores
-        alert(`Player ${playerScore} - Computer ${computerScore}`);
+        score.textContent = `Player ${playerScore} - Computer ${computerScore}`;
     }
 
-    if (playerScore == 5) alert('Congratulations, you have won 5 rounds!');
-    if (computerScore == 5) alert('The computer has won 5 rounds, better luck next time!');
-};
+    if (playerScore == 5) resultPara.textContent = 'Congratulations, you have won 5 rounds!';
+    if (computerScore == 5)
+        resultPara.textContent = 'The computer has won 5 rounds, better luck next time!';
+}
 
 const capitalize = (str) => {
     return str[0].toUpperCase() + str.slice(1);
 };
 
-game();
+let buttons = document.querySelectorAll('.option');
+let score = document.querySelector('#score');
+
+let playerScore = 0;
+let computerScore = 0;
+
+buttons.forEach((button) => {
+    button.addEventListener('click', game);
+});
